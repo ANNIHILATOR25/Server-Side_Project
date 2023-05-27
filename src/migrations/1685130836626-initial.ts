@@ -1,0 +1,126 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class Initial1685130836626 implements MigrationInterface {
+    name = 'Initial1685130836626'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE "expos" ("id" SERIAL NOT NULL, "fullname" character varying NOT NULL, "expo_type" character varying NOT NULL, "age" integer NOT NULL, "power" integer NOT NULL, "HallId" integer NOT NULL, CONSTRAINT "UQ_44568133cf14b7a4ce1104c14f9" UNIQUE ("fullname"), CONSTRAINT "PK_7e812163d42fe3cdaa8dafc545b" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "halls" ("id" SERIAL NOT NULL, "HallName" character varying NOT NULL, "StaffId" integer NOT NULL, "ExpoId" integer NOT NULL, "EventId" integer NOT NULL, CONSTRAINT "PK_4665c2f3b1e718e12b06278bae8" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "expo_hall" ("hall_id" integer NOT NULL, "expo_id" integer NOT NULL, CONSTRAINT "PK_944093b27ab3fca02b1b0bf5360" PRIMARY KEY ("hall_id", "expo_id"))`);
+        await queryRunner.query(`CREATE INDEX "IDX_0ad7f84af27d26ff95f71ed004" ON "expo_hall" ("hall_id") `);
+        await queryRunner.query(`CREATE INDEX "IDX_6a78d3f039aeb5e65ac0698aa1" ON "expo_hall" ("expo_id") `);
+        await queryRunner.query(`CREATE TABLE "event_hall" ("hall_Id" integer NOT NULL, "event_id" integer NOT NULL, CONSTRAINT "PK_f10b92d461f8bcc26b6fcbd35c0" PRIMARY KEY ("hall_Id", "event_id"))`);
+        await queryRunner.query(`CREATE INDEX "IDX_536427c49a22594dbe3206b221" ON "event_hall" ("hall_Id") `);
+        await queryRunner.query(`CREATE INDEX "IDX_fd4986737828e453d0f47d376c" ON "event_hall" ("event_id") `);
+        await queryRunner.query(`CREATE TABLE "hall_staff" ("StaffId" integer NOT NULL, "staff_id" integer NOT NULL, CONSTRAINT "PK_25a91322c4c2bda9ec7edd299c8" PRIMARY KEY ("StaffId", "staff_id"))`);
+        await queryRunner.query(`CREATE INDEX "IDX_10c780f5c66cf889a5a3cf2adb" ON "hall_staff" ("StaffId") `);
+        await queryRunner.query(`CREATE INDEX "IDX_cbc3268c1463710ab2296ffd32" ON "hall_staff" ("staff_id") `);
+        await queryRunner.query(`CREATE TABLE "hall_event" ("EventId" integer NOT NULL, "Event_id" integer NOT NULL, CONSTRAINT "PK_dc71b8d33dd1686e0b99091ad58" PRIMARY KEY ("EventId", "Event_id"))`);
+        await queryRunner.query(`CREATE INDEX "IDX_993e81c201734ee6c8c9b62ce5" ON "hall_event" ("EventId") `);
+        await queryRunner.query(`CREATE INDEX "IDX_e6ebda60c73997f1ca2cc3230d" ON "hall_event" ("Event_id") `);
+        await queryRunner.query(`CREATE TABLE "staff_hall" ("hall_Id" integer NOT NULL, "staff_id" integer NOT NULL, CONSTRAINT "PK_37c6f9a66e50523bba7d64df705" PRIMARY KEY ("hall_Id", "staff_id"))`);
+        await queryRunner.query(`CREATE INDEX "IDX_ca2c737de147e92e74b5e0f2d9" ON "staff_hall" ("hall_Id") `);
+        await queryRunner.query(`CREATE INDEX "IDX_3b26323809f9e166b7a070e55f" ON "staff_hall" ("staff_id") `);
+        await queryRunner.query(`ALTER TABLE "event" DROP COLUMN "eventname"`);
+        await queryRunner.query(`ALTER TABLE "event" DROP COLUMN "eventtype"`);
+        await queryRunner.query(`ALTER TABLE "event" DROP COLUMN "hallid"`);
+        await queryRunner.query(`ALTER TABLE "staff" DROP COLUMN "name"`);
+        await queryRunner.query(`ALTER TABLE "staff" DROP COLUMN "hallid"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "PK_944093b27ab3fca02b1b0bf5360"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "PK_6a78d3f039aeb5e65ac0698aa1a" PRIMARY KEY ("expo_id")`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_0ad7f84af27d26ff95f71ed004"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP COLUMN "hall_id"`);
+        await queryRunner.query(`ALTER TABLE "event" ADD "EventName" character varying NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "event" ADD "EventType" character varying NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "event" ADD "HallId" integer NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "staff" ADD "Name" character varying NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "staff" ADD "HallId" integer NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD "hall_id" integer NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "PK_6a78d3f039aeb5e65ac0698aa1a"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "PK_944093b27ab3fca02b1b0bf5360" PRIMARY KEY ("expo_id", "hall_id")`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD "ExpoId" integer NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "PK_944093b27ab3fca02b1b0bf5360"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "PK_83026b5bddadced414c4cb8a3b8" PRIMARY KEY ("expo_id", "hall_id", "ExpoId")`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "PK_83026b5bddadced414c4cb8a3b8"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "PK_944093b27ab3fca02b1b0bf5360" PRIMARY KEY ("hall_id", "expo_id")`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "PK_83026b5bddadced414c4cb8a3b8"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "PK_533dadbf00c24368aa3110af5da" PRIMARY KEY ("ExpoId", "expo_id")`);
+        await queryRunner.query(`ALTER TABLE "staff" DROP COLUMN "position"`);
+        await queryRunner.query(`ALTER TABLE "staff" ADD "position" character varying NOT NULL`);
+        await queryRunner.query(`CREATE INDEX "IDX_0ad7f84af27d26ff95f71ed004" ON "expo_hall" ("hall_id") `);
+        await queryRunner.query(`CREATE INDEX "IDX_89a62e82195a1120743e3644c2" ON "expo_hall" ("ExpoId") `);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "FK_0ad7f84af27d26ff95f71ed004c" FOREIGN KEY ("hall_id") REFERENCES "expos"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "FK_6a78d3f039aeb5e65ac0698aa1a" FOREIGN KEY ("expo_id") REFERENCES "halls"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "event_hall" ADD CONSTRAINT "FK_536427c49a22594dbe3206b2214" FOREIGN KEY ("hall_Id") REFERENCES "event"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "event_hall" ADD CONSTRAINT "FK_fd4986737828e453d0f47d376ce" FOREIGN KEY ("event_id") REFERENCES "halls"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "FK_89a62e82195a1120743e3644c22" FOREIGN KEY ("ExpoId") REFERENCES "halls"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "FK_6a78d3f039aeb5e65ac0698aa1a" FOREIGN KEY ("expo_id") REFERENCES "expos"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "hall_staff" ADD CONSTRAINT "FK_10c780f5c66cf889a5a3cf2adb3" FOREIGN KEY ("StaffId") REFERENCES "halls"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "hall_staff" ADD CONSTRAINT "FK_cbc3268c1463710ab2296ffd329" FOREIGN KEY ("staff_id") REFERENCES "staff"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "hall_event" ADD CONSTRAINT "FK_993e81c201734ee6c8c9b62ce5d" FOREIGN KEY ("EventId") REFERENCES "halls"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "hall_event" ADD CONSTRAINT "FK_e6ebda60c73997f1ca2cc3230d3" FOREIGN KEY ("Event_id") REFERENCES "event"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "staff_hall" ADD CONSTRAINT "FK_ca2c737de147e92e74b5e0f2d96" FOREIGN KEY ("hall_Id") REFERENCES "staff"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE "staff_hall" ADD CONSTRAINT "FK_3b26323809f9e166b7a070e55f6" FOREIGN KEY ("staff_id") REFERENCES "halls"("id") ON DELETE CASCADE ON UPDATE CASCADE`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE "staff_hall" DROP CONSTRAINT "FK_3b26323809f9e166b7a070e55f6"`);
+        await queryRunner.query(`ALTER TABLE "staff_hall" DROP CONSTRAINT "FK_ca2c737de147e92e74b5e0f2d96"`);
+        await queryRunner.query(`ALTER TABLE "hall_event" DROP CONSTRAINT "FK_e6ebda60c73997f1ca2cc3230d3"`);
+        await queryRunner.query(`ALTER TABLE "hall_event" DROP CONSTRAINT "FK_993e81c201734ee6c8c9b62ce5d"`);
+        await queryRunner.query(`ALTER TABLE "hall_staff" DROP CONSTRAINT "FK_cbc3268c1463710ab2296ffd329"`);
+        await queryRunner.query(`ALTER TABLE "hall_staff" DROP CONSTRAINT "FK_10c780f5c66cf889a5a3cf2adb3"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "FK_6a78d3f039aeb5e65ac0698aa1a"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "FK_89a62e82195a1120743e3644c22"`);
+        await queryRunner.query(`ALTER TABLE "event_hall" DROP CONSTRAINT "FK_fd4986737828e453d0f47d376ce"`);
+        await queryRunner.query(`ALTER TABLE "event_hall" DROP CONSTRAINT "FK_536427c49a22594dbe3206b2214"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "FK_6a78d3f039aeb5e65ac0698aa1a"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "FK_0ad7f84af27d26ff95f71ed004c"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_89a62e82195a1120743e3644c2"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_0ad7f84af27d26ff95f71ed004"`);
+        await queryRunner.query(`ALTER TABLE "staff" DROP COLUMN "position"`);
+        await queryRunner.query(`ALTER TABLE "staff" ADD "position" character varying(200) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "PK_533dadbf00c24368aa3110af5da"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "PK_83026b5bddadced414c4cb8a3b8" PRIMARY KEY ("expo_id", "hall_id", "ExpoId")`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "PK_944093b27ab3fca02b1b0bf5360"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "PK_83026b5bddadced414c4cb8a3b8" PRIMARY KEY ("expo_id", "hall_id", "ExpoId")`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "PK_83026b5bddadced414c4cb8a3b8"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "PK_944093b27ab3fca02b1b0bf5360" PRIMARY KEY ("expo_id", "hall_id")`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP COLUMN "ExpoId"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "PK_944093b27ab3fca02b1b0bf5360"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "PK_6a78d3f039aeb5e65ac0698aa1a" PRIMARY KEY ("expo_id")`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP COLUMN "hall_id"`);
+        await queryRunner.query(`ALTER TABLE "staff" DROP COLUMN "HallId"`);
+        await queryRunner.query(`ALTER TABLE "staff" DROP COLUMN "Name"`);
+        await queryRunner.query(`ALTER TABLE "event" DROP COLUMN "HallId"`);
+        await queryRunner.query(`ALTER TABLE "event" DROP COLUMN "EventType"`);
+        await queryRunner.query(`ALTER TABLE "event" DROP COLUMN "EventName"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD "hall_id" integer NOT NULL`);
+        await queryRunner.query(`CREATE INDEX "IDX_0ad7f84af27d26ff95f71ed004" ON "expo_hall" ("hall_id") `);
+        await queryRunner.query(`ALTER TABLE "expo_hall" DROP CONSTRAINT "PK_6a78d3f039aeb5e65ac0698aa1a"`);
+        await queryRunner.query(`ALTER TABLE "expo_hall" ADD CONSTRAINT "PK_944093b27ab3fca02b1b0bf5360" PRIMARY KEY ("hall_id", "expo_id")`);
+        await queryRunner.query(`ALTER TABLE "staff" ADD "hallid" integer NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "staff" ADD "name" character varying(200) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "event" ADD "hallid" integer NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "event" ADD "eventtype" character varying(200) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE "event" ADD "eventname" character varying(200) NOT NULL`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_3b26323809f9e166b7a070e55f"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_ca2c737de147e92e74b5e0f2d9"`);
+        await queryRunner.query(`DROP TABLE "staff_hall"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_e6ebda60c73997f1ca2cc3230d"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_993e81c201734ee6c8c9b62ce5"`);
+        await queryRunner.query(`DROP TABLE "hall_event"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_cbc3268c1463710ab2296ffd32"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_10c780f5c66cf889a5a3cf2adb"`);
+        await queryRunner.query(`DROP TABLE "hall_staff"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_fd4986737828e453d0f47d376c"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_536427c49a22594dbe3206b221"`);
+        await queryRunner.query(`DROP TABLE "event_hall"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_6a78d3f039aeb5e65ac0698aa1"`);
+        await queryRunner.query(`DROP INDEX "public"."IDX_0ad7f84af27d26ff95f71ed004"`);
+        await queryRunner.query(`DROP TABLE "expo_hall"`);
+        await queryRunner.query(`DROP TABLE "halls"`);
+        await queryRunner.query(`DROP TABLE "expos"`);
+    }
+
+}
